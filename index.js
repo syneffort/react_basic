@@ -50,7 +50,10 @@ app.post('/login', (req, res) => {
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (!isMatch) return res.json({ loginSuccess: false, message: '잘못된 비밀번호입니다.'});
 
-            return res.json({ success: true });
+            user.generateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+
+            });
         });
     });
 });
