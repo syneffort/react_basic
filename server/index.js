@@ -11,8 +11,6 @@ const config = require('./config/key');
 const auth = require('./middleware/auth');
 
 const app = express();
-const port = 5000;
-
 
 app.use(bodyParser.urlencoded({ extended: true })); // application/x-www-form-urlencoded
 app.use(bodyParser.json()); // application/json
@@ -31,6 +29,10 @@ mongoose.connect(config.mongoURI, {
 
 app.get('/', (req, res) => {
     res.send('Hello Node!');
+});
+
+app.get('/api/hello', (req, res) => {
+    res.send('Hello React!')
 });
 
 app.post('/api/users/register', (req, res) => {
@@ -87,6 +89,8 @@ app.get('/api/users/logout', auth, (req, res) => {
         return res.status(200).send({ success: true });
     });
 });
+
+const port = 5000;
 
 app.listen(port, () => {
     console.log(`✔ Example app listening on port ${port}`);
