@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const port = 5000;
 
 app.use(bodyParser.urlencoded({ extended: true })); // application/x-www-form-urlencoded
 app.use(bodyParser.json()); // application/json
+app.use(cookieParser());
 
 mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,
@@ -53,6 +55,12 @@ app.post('/login', (req, res) => {
             user.generateToken((err, user) => {
                 if (err) return res.status(400).send(err);
 
+                res.cookie('x_auth', user.token)
+                    .status(200)
+                    .json({
+                        loginSuccess: true,
+                        userId: user._id
+                    });
             });
         });
     });
