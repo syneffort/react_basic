@@ -8,6 +8,7 @@ dotenv.config();
 
 const User = require('./models/User');
 const config = require('./config/key');
+const auth = require('./middleware/auth');
 
 const app = express();
 const port = 5000;
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
     res.send('Hello Node!');
 });
 
-app.post('/register', (req, res) => {
+app.post('api/users/register', (req, res) => {
     const user = new User(req.body);
     user.save((err, doc) => {
         if (err) return res.json({ success: false, err });
@@ -40,7 +41,7 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.post('/login', (req, res) => {
+app.post('api/users/login', (req, res) => {
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {
             return res.json({
@@ -63,6 +64,19 @@ app.post('/login', (req, res) => {
                     });
             });
         });
+    });
+});
+
+app.get('api/users/auth', auth, (req, res) => {
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image,
     });
 });
 
