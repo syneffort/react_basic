@@ -5,8 +5,8 @@ import { withRouter } from 'react-router-dom';
 function LandingPage(props) {
 
     useEffect(() => {
-        axios.get('/api/hello')
-            .then(response => console.log(response.data));
+        // axios.get('/api/hello')
+        //     .then(response => console.log(response.data));
     }, [])
 
     const onClickHandler = () => {

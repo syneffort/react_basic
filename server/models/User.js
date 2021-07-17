@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 const { Schema } = mongoose;
 
@@ -64,6 +65,8 @@ userSchema.methods.comparePassword = function (plainPassword, cb) {
 userSchema.methods.generateToken = function (cb) {
     let user = this;
     let token = jwt.sign(user._id.toString(), process.env.JTW_TOKEN);
+    
+    user.tokenExp = moment().add(1, 'hour').valueOf();
     user.token = token;
     user.save((err, user) => {
         if (err) return cb(err);
